@@ -1,31 +1,38 @@
-stages: 
+stages:
   - build
   - test
+  - push
   - deploy
 
-build-job:  
+build_job:
   stage: build
   script:
-    - echo "Compiling the code..."
-    - echo "Compile complete." 
+    - echo "Building project $CI_PROJECT_NAME"
+    - echo "Docker build completed."
 
-unit-test-job:
-  stage: test 
+test_job:
+  stage: test
   script:
-    - echo "Running unit tests... This will take about 60 seconds."
-    - sleep 60
-    - echo "Code coverage is 90%"
+    - mkdir -p logs
+    - echo "Testing project by $CI_COMMIT_AUTHOR"
+    - echo "All test cases passed." > logs/app.log
 
-lint-test-job:
-  stage: test 
+  artifacts:
+    paths:
+      - logs/
+    expire_in: 1 week
+
+push_job:
+  stage: push
   script:
-    - echo "Linting code... This will take about 10 seconds."
-    - sleep 10
-    - echo "No lint issues found."
+    - echo "Pushing Docker image..."
+    - 'echo "DockerHub User: $CICDKEY"'   
+    - 'echo "DockerHub Token: $GitlabToken"'
 
-deploy-job:   
+deploy_job:
   stage: deploy
-  environment: production
+  environment:
+    name: production
   script:
     - echo "Deploying application..."
-    - echo "Application successfully deployed."
+    - echo "Deployment completed."
