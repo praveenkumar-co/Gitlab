@@ -16,6 +16,8 @@ test_job:
     - mkdir -p logs
     - echo "Testing project by $CI_COMMIT_AUTHOR"
     - echo "All test cases passed." > logs/app.log
+  tags:
+    - Run-in-gitlab
 
   artifacts:
     paths:
@@ -36,3 +38,15 @@ deploy_job:
   script:
     - echo "Deploying application..."
     - echo "Deployment completed."
+
+dev_test_job:
+  stage: test
+  script:
+    - echo "tested for dev using $GitlabToken"
+  tags:
+    - Run-in-gitlab
+
+prod_test_job:
+  stage: test
+  script:
+    - echo "tested for prod using $GitlabToken"
